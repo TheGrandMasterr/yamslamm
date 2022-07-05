@@ -49,6 +49,7 @@ bool Player::doMove(Board& b) {
 	if (numMoves == 0) {
 		cout << "you roll all dice to start" << endl;
 		b.rollAllDice();
+		b.printDice();
 		numMoves++;
 		return true;
 	}
@@ -89,7 +90,8 @@ int Player::bestCoinWithDice(Board& b) {
 		return 100;
 	}
 	//large straight check
-	else if ((b.getDiceatIndex(0).getDieValue() == 1 || (b.getDiceatIndex(0).getDieValue() == 2))) {
+	if ((b.getDiceatIndex(0).getDieValue() == 1 || (b.getDiceatIndex(0).getDieValue() == 2))) {
+		// two cases for a large straight
 		if ((b.getDiceatIndex(0).getDieValue() == 1) && (b.getDiceatIndex(1).getDieValue() == 2) && (b.getDiceatIndex(2).getDieValue() == 3) && (b.getDiceatIndex(3).getDieValue() == 4) && (b.getDiceatIndex(4).getDieValue() == 5)) {
 			cout << "Large straight" << endl;
 			return 0;
@@ -100,19 +102,32 @@ int Player::bestCoinWithDice(Board& b) {
 		}
 	}
 	// 4 of a kind
-	else if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(3).getDieValue()) || (b.getDiceatIndex(1).getDieValue() == b.getDiceatIndex(4).getDieValue())) {
+	if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(3).getDieValue()) || (b.getDiceatIndex(1).getDieValue() == b.getDiceatIndex(4).getDieValue())) {
 		cout << "4 of a kind" << endl;
 		return 1;
-	} else if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(2).getDieValue()) && (b.getDiceatIndex(3).getDieValue() == b.getDiceatIndex(4).getDieValue())) {
+		// two cases for full house
+	} if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(2).getDieValue()) && (b.getDiceatIndex(3).getDieValue() == b.getDiceatIndex(4).getDieValue())) {
 		return 2;
 		cout << "full house";
-	} else if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(1).getDieValue()) && (b.getDiceatIndex(2).getDieValue() == b.getDiceatIndex(4).getDieValue())) {
+	} if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(1).getDieValue()) && (b.getDiceatIndex(2).getDieValue() == b.getDiceatIndex(4).getDieValue())) {
 		return 2;
 		cout << "full house";
-	}
-	else if (b.getDiceatIndex(0).isRed() == b.getDiceatIndex(1).isRed() == b.getDiceatIndex(2).isRed() == b.getDiceatIndex(3).isRed() == b.getDiceatIndex(3).isRed()) {
+	} if (b.getDiceatIndex(0).isRed() == b.getDiceatIndex(1).isRed() == b.getDiceatIndex(2).isRed() == b.getDiceatIndex(3).isRed() == b.getDiceatIndex(3).isRed()) {
 		return 3;
 		cout << "flush";
-	} 
+	} if ((b.getDiceatIndex(0).getDieValue() == 1) && (b.getDiceatIndex(1).getDieValue() == 2) && (b.getDiceatIndex(2).getDieValue() == 3) && (b.getDiceatIndex(3).getDieValue() == 4)) {
+		cout << "Small straight" << endl;
+		return 4;
+		// does not cover all cases such as 1 2 2 3 4
+	} if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(2).getDieValue()) || (b.getDiceatIndex(1).getDieValue() == b.getDiceatIndex(3).getDieValue()) || (b.getDiceatIndex(2).getDieValue() == b.getDiceatIndex(4).getDieValue())) {
+		cout << "3 of a kind" << endl;
+		return 5;
+	} if ((b.getDiceatIndex(0).getDieValue() == b.getDiceatIndex(1).getDieValue()) && ((b.getDiceatIndex(2).getDieValue() == b.getDiceatIndex(3).getDieValue()) || (b.getDiceatIndex(3).getDieValue() == b.getDiceatIndex(4).getDieValue()))) {
+		// cases are 11 33 4 1 22 44 33 5 66
+		// will give error
+		cout << "two pairs" << endl;
+		return 6;
+}
+	
 	return 10;
 }
